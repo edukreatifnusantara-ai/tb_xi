@@ -1,0 +1,1484 @@
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(const TbXiApp());
+}
+
+// ============================================================
+// DATA LOKAL SEMENTARA
+// ============================================================
+
+class TbItem {
+  final String name;
+  final String description;
+  final String type;
+
+  TbItem({
+    required this.name,
+    required this.description,
+    required this.type,
+  });
+}
+
+final ValueNotifier<List<TbItem>> itemsNotifier =
+    ValueNotifier<List<TbItem>>([
+  TbItem(
+    name: 'Nasi Gratis',
+    description: '5 bungkus tersedia',
+    type: 'BERBAGI',
+  ),
+  TbItem(
+    name: 'Sayuran',
+    description: 'Segar · Rp5.000',
+    type: 'PUNYA',
+  ),
+  TbItem(
+    name: 'Servis Kipas',
+    description: 'Jasa perbaikan',
+    type: 'PUNYA',
+  ),
+]);
+
+void addItem(TbItem item) {
+  itemsNotifier.value = [
+    item,
+    ...itemsNotifier.value,
+  ];
+}
+
+// ============================================================
+// APP
+// ============================================================
+
+class TbXiApp extends StatelessWidget {
+  const TbXiApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'TB XI',
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        useMaterial3: true,
+        scaffoldBackgroundColor: const Color(0xFFF8F7F4),
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color(0xFF9A7500),
+        ),
+      ),
+      home: const LoginPage(),
+    );
+  }
+}
+
+
+// ============================================================
+// LOGIN / REGISTRASI
+// ============================================================
+
+class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
+
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  final TextEditingController nameController =
+      TextEditingController();
+
+  final TextEditingController phoneController =
+      TextEditingController();
+
+  final TextEditingController emailController =
+      TextEditingController();
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    phoneController.dispose();
+    emailController.dispose();
+    super.dispose();
+  }
+
+  void continueToHome() {
+    final name = nameController.text.trim();
+    final phone = phoneController.text.trim();
+    final email = emailController.text.trim();
+
+    if (name.isEmpty || phone.isEmpty || email.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Lengkapi nama, nomor HP, dan email.'),
+        ),
+      );
+      return;
+    }
+
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (_) => const HomePage(),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: const Color(0xFFF8F7F4),
+      body: SafeArea(
+        child: Center(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.fromLTRB(24, 30, 24, 24),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const SizedBox(height: 20),
+
+                // LOGO
+                Center(
+                  child: Container(
+                    width: 90,
+                    height: 90,
+                    decoration: BoxDecoration(
+                      color: Colors.black,
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: const Color(0xFFD4AF37),
+                        width: 2,
+                      ),
+                    ),
+                    child: ClipOval(
+                      child: Image.asset(
+                        'assets/images/tb_xi_logo.png',
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 22),
+
+                const Center(
+                  child: Text(
+                    'TB XI',
+                    style: TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 6),
+
+                const Center(
+                  child: Text(
+                    'Sederhana, Bermakna,\nDekat dengan Manusia.',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 13,
+                      color: Colors.black54,
+                      height: 1.4,
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 42),
+
+                const Text(
+                  'Buat akun TB XI',
+                  style: TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+
+                const SizedBox(height: 8),
+
+                const Text(
+                  'Satu nomor HP untuk satu akun.',
+                  style: TextStyle(
+                    color: Colors.black54,
+                  ),
+                ),
+
+                const SizedBox(height: 24),
+
+                _field(
+                  controller: nameController,
+                  label: 'Nama panggilan',
+                  hint: 'Contoh: Budi',
+                  icon: Icons.person_outline,
+                ),
+
+                const SizedBox(height: 14),
+
+                _field(
+                  controller: phoneController,
+                  label: 'Nomor HP',
+                  hint: 'Contoh: 08123456789',
+                  icon: Icons.phone_outlined,
+                  keyboardType: TextInputType.phone,
+                ),
+
+                const SizedBox(height: 14),
+
+                _field(
+                  controller: emailController,
+                  label: 'Email',
+                  hint: 'Contoh: nama@email.com',
+                  icon: Icons.email_outlined,
+                  keyboardType: TextInputType.emailAddress,
+                ),
+
+                const SizedBox(height: 28),
+
+                SizedBox(
+                  height: 52,
+                  child: FilledButton(
+                    onPressed: continueToHome,
+                    style: FilledButton.styleFrom(
+                      backgroundColor: const Color(0xFF9A7500),
+                    ),
+                    child: const Text(
+                      'LANJUTKAN',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 18),
+
+                const Text(
+                  'Dengan menggunakan TB XI, Anda setuju '
+                  'menggunakan layanan dengan baik dan bertanggung jawab.',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 11,
+                    color: Colors.black45,
+                    height: 1.4,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _field({
+    required TextEditingController controller,
+    required String label,
+    required String hint,
+    required IconData icon,
+    TextInputType? keyboardType,
+  }) {
+    return TextField(
+      controller: controller,
+      keyboardType: keyboardType,
+      decoration: InputDecoration(
+        labelText: label,
+        hintText: hint,
+        prefixIcon: Icon(icon),
+        filled: true,
+        fillColor: Colors.white,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(14),
+          borderSide: const BorderSide(
+            color: Colors.black12,
+          ),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(14),
+          borderSide: const BorderSide(
+            color: Colors.black12,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// ============================================================
+// HOME
+// ============================================================
+
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  int selectedIndex = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: SafeArea(
+        child: selectedIndex == 0
+            ? const HomeContent()
+            : Center(
+                child: Text(
+                  selectedIndex == 1 ? 'Aktivitas' : 'Saya',
+                  style: const TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+      ),
+      bottomNavigationBar: NavigationBar(
+        selectedIndex: selectedIndex,
+        onDestinationSelected: (index) {
+          setState(() {
+            selectedIndex = index;
+          });
+        },
+        backgroundColor: Colors.white,
+        elevation: 0,
+        destinations: const [
+          NavigationDestination(
+            icon: Icon(Icons.home_outlined),
+            selectedIcon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.notifications_none),
+            selectedIcon: Icon(Icons.notifications),
+            label: 'Aktivitas',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.person_outline),
+            selectedIcon: Icon(Icons.person),
+            label: 'Saya',
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class HomeContent extends StatelessWidget {
+  const HomeContent({super.key});
+
+  void openPage(BuildContext context, Widget page) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => page,
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomScrollView(
+      slivers: [
+        SliverPadding(
+          padding: const EdgeInsets.fromLTRB(20, 18, 20, 30),
+          sliver: SliverList(
+            delegate: SliverChildListDelegate([
+              // HEADER
+              Row(
+                children: [
+                  Container(
+                    width: 56,
+                    height: 56,
+                    decoration: BoxDecoration(
+                      color: Colors.black,
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: const Color(0xFFD4AF37),
+                        width: 1.5,
+                      ),
+                    ),
+                    child: ClipOval(
+                      child: Image.asset(
+                        'assets/images/tb_xi_logo.png',
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  const Expanded(
+                    child: Column(
+                      crossAxisAlignment:
+                          CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'TB XI',
+                          style: TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        SizedBox(height: 2),
+                        Text(
+                          'Sederhana, Bermakna, Dekat dengan Manusia.',
+                          style: TextStyle(
+                            fontSize: 11,
+                            color: Colors.black54,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+
+              const SizedBox(height: 26),
+
+              // LOKASI
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 13,
+                ),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(
+                    color: Colors.black12,
+                  ),
+                ),
+                child: const Row(
+                  children: [
+                    Icon(
+                      Icons.location_on_outlined,
+                      color: Color(0xFF8C6A00),
+                    ),
+                    SizedBox(width: 9),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment:
+                            CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Semarang Selatan',
+                            style: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          SizedBox(height: 2),
+                          Text(
+                            'Yang tersedia dalam radius 1 KM',
+                            style: TextStyle(
+                              fontSize: 11,
+                              color: Colors.black54,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Icon(
+                      Icons.chevron_right,
+                      color: Colors.black38,
+                    ),
+                  ],
+                ),
+              ),
+
+              const SizedBox(height: 28),
+
+              const Text(
+                'Apa yang ingin Anda lakukan?',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+
+              const SizedBox(height: 16),
+
+              // BUTUH + PUNYA
+              Row(
+                children: [
+                  Expanded(
+                    child: ActionButton(
+                      icon: Icons.search,
+                      title: 'BUTUH',
+                      subtitle: 'Cari kebutuhan',
+                      iconColor: const Color(0xFF3F6F8F),
+                      onTap: () {
+                        openPage(
+                          context,
+                          const FormPage(
+                            title: 'Saya Butuh',
+                            description:
+                                'Apa yang sedang Anda butuhkan?',
+                            buttonText: 'POSTING KEBUTUHAN',
+                            type: 'BUTUH',
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: ActionButton(
+                      icon: Icons.inventory_2_outlined,
+                      title: 'PUNYA',
+                      subtitle: 'Saya punya',
+                      iconColor: const Color(0xFF5F7F52),
+                      onTap: () {
+                        openPage(
+                          context,
+                          const FormPage(
+                            title: 'Saya Punya',
+                            description:
+                                'Apa yang Anda punya?',
+                            buttonText: 'POSTING',
+                            type: 'PUNYA',
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+
+              const SizedBox(height: 12),
+
+              // BERBAGI
+              ActionButton(
+                icon: Icons.favorite_border,
+                title: 'BERBAGI',
+                subtitle:
+                    'Berikan kepada yang membutuhkan',
+                iconColor: const Color(0xFFB24C5A),
+                fullWidth: true,
+                onTap: () {
+                  openPage(
+                    context,
+                    const FormPage(
+                      title: 'Saya Berbagi',
+                      description:
+                          'Apa yang ingin Anda bagikan?',
+                      buttonText: 'BAGIKAN',
+                      type: 'BERBAGI',
+                    ),
+                  );
+                },
+              ),
+
+              const SizedBox(height: 34),
+
+              // JUDUL SEKITAR
+              Row(
+                children: [
+                  const Expanded(
+                    child: Text(
+                      'Di sekitar Anda',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 6,
+                    ),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFEDE8D8),
+                      borderRadius:
+                          BorderRadius.circular(20),
+                    ),
+                    child: const Text(
+                      '≤ 1 KM',
+                      style: TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w700,
+                        color: Color(0xFF725900),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+
+              const SizedBox(height: 14),
+
+              // DATA DINAMIS
+              ValueListenableBuilder<List<TbItem>>(
+                valueListenable: itemsNotifier,
+                builder: (context, items, child) {
+                  return Column(
+                    children: items.map((item) {
+                      return NearbyCard(
+                        item: item,
+                        onMatch: () {
+                          openPage(
+                            context,
+                            MatchPage(
+                              itemName: item.name,
+                            ),
+                          );
+                        },
+                      );
+                    }).toList(),
+                  );
+                },
+              ),
+            ]),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+// ============================================================
+// ACTION BUTTON
+// ============================================================
+
+class ActionButton extends StatelessWidget {
+  final IconData icon;
+  final String title;
+  final String subtitle;
+  final Color iconColor;
+  final bool fullWidth;
+  final VoidCallback onTap;
+
+  const ActionButton({
+    super.key,
+    required this.icon,
+    required this.title,
+    required this.subtitle,
+    required this.iconColor,
+    required this.onTap,
+    this.fullWidth = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 92,
+      width: fullWidth ? double.infinity : null,
+      child: Material(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(18),
+        child: InkWell(
+          borderRadius: BorderRadius.circular(18),
+          onTap: onTap,
+          child: Container(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 14,
+            ),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(18),
+              border: Border.all(
+                color: Colors.black12,
+              ),
+            ),
+            child: Row(
+              children: [
+                Container(
+                  width: 48,
+                  height: 48,
+                  decoration: BoxDecoration(
+                    color: iconColor.withValues(
+                      alpha: 0.10,
+                    ),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    icon,
+                    color: iconColor,
+                    size: 24,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    mainAxisAlignment:
+                        MainAxisAlignment.center,
+                    crossAxisAlignment:
+                        CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        title,
+                        style: const TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
+                      const SizedBox(height: 3),
+                      Text(
+                        subtitle,
+                        style: const TextStyle(
+                          fontSize: 10,
+                          color: Colors.black54,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const Icon(
+                  Icons.arrow_forward_ios,
+                  size: 14,
+                  color: Colors.black26,
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// ============================================================
+// NEARBY CARD
+// ============================================================
+
+class NearbyCard extends StatelessWidget {
+  final TbItem item;
+  final VoidCallback onMatch;
+
+  const NearbyCard({
+    super.key,
+    required this.item,
+    required this.onMatch,
+  });
+
+  String get emoji {
+    final name = item.name.toLowerCase();
+
+    if (name.contains('nasi')) return '🍚';
+    if (name.contains('sayur')) return '🥬';
+    if (name.contains('beras')) return '🍚';
+    if (name.contains('baju')) return '👕';
+    if (name.contains('kipas')) return '🔧';
+
+    return '📦';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(
+          color: Colors.black12,
+        ),
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 54,
+            height: 54,
+            decoration: BoxDecoration(
+              color: const Color(0xFFF5F1E6),
+              borderRadius: BorderRadius.circular(15),
+            ),
+            alignment: Alignment.center,
+            child: Text(
+              emoji,
+              style: const TextStyle(
+                fontSize: 28,
+              ),
+            ),
+          ),
+
+          const SizedBox(width: 14),
+
+          Expanded(
+            child: Column(
+              crossAxisAlignment:
+                  CrossAxisAlignment.start,
+              children: [
+                Text(
+                  item.name,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  item.description,
+                  style: const TextStyle(
+                    fontSize: 12,
+                    color: Colors.black54,
+                  ),
+                ),
+                const SizedBox(height: 7),
+                Row(
+                  children: [
+                    const Icon(
+                      Icons.location_on_outlined,
+                      size: 14,
+                      color: Colors.black45,
+                    ),
+                    const SizedBox(width: 3),
+                    const Text(
+                      'sekitar Anda',
+                      style: TextStyle(
+                        fontSize: 11,
+                        color: Colors.black54,
+                      ),
+                    ),
+                    const SizedBox(width: 9),
+                    Text(
+                      item.type,
+                      style: const TextStyle(
+                        fontSize: 9,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.black45,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+
+          const SizedBox(width: 8),
+
+          SizedBox(
+            width: 72,
+            child: FilledButton(
+              onPressed: onMatch,
+              style: FilledButton.styleFrom(
+                backgroundColor:
+                    const Color(0xFF8A6B08),
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(
+                  vertical: 11,
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius:
+                      BorderRadius.circular(12),
+                ),
+              ),
+              child: const Text(
+                'MATCH',
+                style: TextStyle(
+                  fontSize: 11,
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ============================================================
+// FORM
+// ============================================================
+
+class FormPage extends StatefulWidget {
+  final String title;
+  final String description;
+  final String buttonText;
+  final String type;
+
+  const FormPage({
+    super.key,
+    required this.title,
+    required this.description,
+    required this.buttonText,
+    required this.type,
+  });
+
+  @override
+  State<FormPage> createState() => _FormPageState();
+}
+
+class _FormPageState extends State<FormPage> {
+  final TextEditingController itemController =
+      TextEditingController();
+
+  final TextEditingController detailController =
+      TextEditingController();
+
+  @override
+  void dispose() {
+    itemController.dispose();
+    detailController.dispose();
+    super.dispose();
+  }
+
+  void submit() {
+    final name = itemController.text.trim();
+    final detail = detailController.text.trim();
+
+    if (name.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Silakan isi nama kebutuhan.'),
+        ),
+      );
+      return;
+    }
+
+    addItem(
+      TbItem(
+        name: name,
+        description: detail.isEmpty
+            ? widget.type
+            : detail,
+        type: widget.type,
+      ),
+    );
+
+    Navigator.pop(context);
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          '$name berhasil ditambahkan.',
+        ),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor:
+            const Color(0xFFF8F7F4),
+        title: Text(widget.title),
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment:
+              CrossAxisAlignment.start,
+          children: [
+            Text(
+              widget.description,
+              style: const TextStyle(
+                fontSize: 21,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+
+            const SizedBox(height: 24),
+
+            const Text(
+              'Nama / kebutuhan',
+              style: TextStyle(
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+
+            const SizedBox(height: 8),
+
+            TextField(
+              controller: itemController,
+              decoration: InputDecoration(
+                hintText:
+                    'Contoh: nasi, beras, sayuran...',
+                filled: true,
+                fillColor: Colors.white,
+                border: OutlineInputBorder(
+                  borderRadius:
+                      BorderRadius.circular(14),
+                  borderSide:
+                      const BorderSide(
+                    color: Colors.black12,
+                  ),
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 18),
+
+            const Text(
+              'Keterangan',
+              style: TextStyle(
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+
+            const SizedBox(height: 8),
+
+            TextField(
+              controller: detailController,
+              maxLines: 4,
+              decoration: InputDecoration(
+                hintText:
+                    'Keterangan singkat...',
+                filled: true,
+                fillColor: Colors.white,
+                border: OutlineInputBorder(
+                  borderRadius:
+                      BorderRadius.circular(14),
+                  borderSide:
+                      const BorderSide(
+                    color: Colors.black12,
+                  ),
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 24),
+
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: const Color(0xFFEDE8D8),
+                borderRadius:
+                    BorderRadius.circular(14),
+              ),
+              child: const Row(
+                children: [
+                  Icon(
+                    Icons.location_on_outlined,
+                    color: Color(0xFF8A6B08),
+                  ),
+                  SizedBox(width: 10),
+                  Expanded(
+                    child: Text(
+                      'Posting hanya akan terlihat '
+                      'oleh pengguna dalam radius maksimal 1 KM.',
+                      style: TextStyle(
+                        fontSize: 12,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            const SizedBox(height: 30),
+
+            SizedBox(
+              width: double.infinity,
+              height: 52,
+              child: FilledButton(
+                onPressed: submit,
+                style: FilledButton.styleFrom(
+                  backgroundColor:
+                      const Color(0xFF8A6B08),
+                ),
+                child: Text(
+                  widget.buttonText,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// ============================================================
+// MATCH
+// ============================================================
+
+class MatchPage extends StatefulWidget {
+  final String itemName;
+
+  const MatchPage({
+    super.key,
+    required this.itemName,
+  });
+
+  @override
+  State<MatchPage> createState() => _MatchPageState();
+}
+
+class _MatchPageState extends State<MatchPage> {
+  int step = 0;
+  final TextEditingController instructionController =
+      TextEditingController();
+
+  @override
+  void dispose() {
+    instructionController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (step == 0) {
+      return _matchConfirmation();
+    }
+
+    if (step == 1) {
+      return _waitingPage();
+    }
+
+    if (step == 2) {
+      return _instructionPage();
+    }
+
+    return _finishedPage();
+  }
+
+  Widget _matchConfirmation() {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: const Color(0xFFF8F7F4),
+        title: const Text('Match'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          children: [
+            const SizedBox(height: 40),
+
+            const Icon(
+              Icons.favorite,
+              size: 70,
+              color: Color(0xFFB24C5A),
+            ),
+
+            const SizedBox(height: 24),
+
+            const Text(
+              'Anda ingin MATCH?',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+
+            const SizedBox(height: 12),
+
+            Text(
+              widget.itemName,
+              style: const TextStyle(
+                fontSize: 21,
+                color: Color(0xFF8A6B08),
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+
+            const SizedBox(height: 20),
+
+            const Text(
+              'Dengan MATCH, Anda menyatakan '
+              'ingin menerima barang atau bantuan ini.',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Colors.black54,
+                height: 1.5,
+              ),
+            ),
+
+            const Spacer(),
+
+            SizedBox(
+              width: double.infinity,
+              height: 52,
+              child: FilledButton(
+                onPressed: () {
+                  setState(() {
+                    step = 1;
+                  });
+                },
+                style: FilledButton.styleFrom(
+                  backgroundColor: const Color(0xFF8A6B08),
+                ),
+                child: const Text(
+                  'YA, MATCH',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 10),
+
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('BATAL'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _waitingPage() {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: const Color(0xFFF8F7F4),
+        title: const Text('Match'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          children: [
+            const SizedBox(height: 50),
+
+            const Icon(
+              Icons.hourglass_empty,
+              size: 70,
+              color: Color(0xFF8A6B08),
+            ),
+
+            const SizedBox(height: 24),
+
+            const Text(
+              'Match terkirim',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+
+            const SizedBox(height: 14),
+
+            Text(
+              widget.itemName,
+              style: const TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+
+            const SizedBox(height: 20),
+
+            const Text(
+              'Menunggu konfirmasi dari pemberi.',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Colors.black54,
+                height: 1.5,
+              ),
+            ),
+
+            const SizedBox(height: 14),
+
+            const Text(
+              'Tidak ada nomor telepon atau alamat '
+              'pribadi yang dibagikan.',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 12,
+                color: Colors.black45,
+              ),
+            ),
+
+            const Spacer(),
+
+            // SIMULASI KONFIRMASI
+            SizedBox(
+              width: double.infinity,
+              height: 52,
+              child: FilledButton(
+                onPressed: () {
+                  setState(() {
+                    step = 2;
+                  });
+                },
+                style: FilledButton.styleFrom(
+                  backgroundColor: const Color(0xFF8A6B08),
+                ),
+                child: const Text(
+                  'SIMULASIKAN: PEMBERI SIAP',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 10),
+
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('BATALKAN MATCH'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _instructionPage() {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: const Color(0xFFF8F7F4),
+        title: const Text('Pengambilan'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 20),
+
+            const Text(
+              'Pemberi sudah siap',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+
+            const SizedBox(height: 10),
+
+            Text(
+              widget.itemName,
+              style: const TextStyle(
+                fontSize: 20,
+                color: Color(0xFF8A6B08),
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+
+            const SizedBox(height: 30),
+
+            const Text(
+              'Instruksi pengambilan',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+
+            const SizedBox(height: 10),
+
+            TextField(
+              controller: instructionController,
+              maxLines: 4,
+              decoration: InputDecoration(
+                hintText:
+                    'Contoh: Nasi saya taruh di pagar depan ya.',
+                filled: true,
+                fillColor: Colors.white,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(14),
+                  borderSide: const BorderSide(
+                    color: Colors.black12,
+                  ),
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 14),
+
+            const Text(
+              'Pesan hanya digunakan untuk instruksi '
+              'pengambilan. Tidak ada chat antar pengguna.',
+              style: TextStyle(
+                fontSize: 12,
+                color: Colors.black45,
+              ),
+            ),
+
+            const Spacer(),
+
+            SizedBox(
+              width: double.infinity,
+              height: 52,
+              child: FilledButton(
+                onPressed: () {
+                  setState(() {
+                    step = 3;
+                  });
+                },
+                style: FilledButton.styleFrom(
+                  backgroundColor: const Color(0xFF8A6B08),
+                ),
+                child: const Text(
+                  'KONFIRMASI PENGAMBILAN',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _finishedPage() {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: const Color(0xFFF8F7F4),
+        title: const Text('Selesai'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          children: [
+            const SizedBox(height: 60),
+
+            const Icon(
+              Icons.check_circle_outline,
+              size: 80,
+              color: Color(0xFF5F7F52),
+            ),
+
+            const SizedBox(height: 24),
+
+            const Text(
+              'Selesai',
+              style: TextStyle(
+                fontSize: 26,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+
+            const SizedBox(height: 12),
+
+            Text(
+              widget.itemName,
+              style: const TextStyle(
+                fontSize: 20,
+                color: Color(0xFF8A6B08),
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+
+            const SizedBox(height: 20),
+
+            const Text(
+              'Semoga bermanfaat.\n'
+              'Terima kasih sudah menggunakan TB XI.',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Colors.black54,
+                height: 1.6,
+              ),
+            ),
+
+            const Spacer(),
+
+            SizedBox(
+              width: double.infinity,
+              height: 52,
+              child: FilledButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                style: FilledButton.styleFrom(
+                  backgroundColor: const Color(0xFF8A6B08),
+                ),
+                child: const Text('SELESAI'),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
