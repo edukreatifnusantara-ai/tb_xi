@@ -9,8 +9,12 @@ import 'package:http/http.dart' as http;
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  sqfliteFfiInit();
-  databaseFactory = databaseFactoryFfi;
+  // sqflite_common_ffi hanya untuk desktop. Pada Android/iOS,
+  // sqflite memakai database factory bawaan platform.
+  if (Platform.isLinux || Platform.isMacOS || Platform.isWindows) {
+    sqfliteFfiInit();
+    databaseFactory = databaseFactoryFfi;
+  }
 
   await loadItemsFromDatabase();
 
