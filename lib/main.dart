@@ -1780,6 +1780,30 @@ class HomeContent extends StatelessWidget {
 
               const SizedBox(height: 16),
 
+              // BERBAGI
+              ActionButton(
+                icon: Icons.favorite_border,
+                title: 'BERBAGI',
+                subtitle:
+                    'Berikan kepada yang membutuhkan',
+                iconColor: const Color(0xFFB24C5A),
+                fullWidth: true,
+                onTap: () {
+                  openPage(
+                    context,
+                    const FormPage(
+                      title: 'Saya Berbagi',
+                      description:
+                          'Apa yang ingin Anda bagikan?',
+                      buttonText: 'BAGIKAN',
+                      type: 'BERBAGI',
+                    ),
+                  );
+                },
+              ),
+
+              const SizedBox(height: 12),
+
               // BUTUH + PUNYA
               Row(
                 children: [
@@ -1825,30 +1849,6 @@ class HomeContent extends StatelessWidget {
                     ),
                   ),
                 ],
-              ),
-
-              const SizedBox(height: 12),
-
-              // BERBAGI
-              ActionButton(
-                icon: Icons.favorite_border,
-                title: 'BERBAGI',
-                subtitle:
-                    'Berikan kepada yang membutuhkan',
-                iconColor: const Color(0xFFB24C5A),
-                fullWidth: true,
-                onTap: () {
-                  openPage(
-                    context,
-                    const FormPage(
-                      title: 'Saya Berbagi',
-                      description:
-                          'Apa yang ingin Anda bagikan?',
-                      buttonText: 'BAGIKAN',
-                      type: 'BERBAGI',
-                    ),
-                  );
-                },
               ),
 
               const SizedBox(height: 34),
