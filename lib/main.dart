@@ -1551,6 +1551,145 @@ class _LocationPageState extends State<LocationPage> {
   }
 }
 
+class HomeHero extends StatelessWidget {
+  const HomeHero({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.fromLTRB(22, 22, 22, 24),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(28),
+        gradient: const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Color(0xFF171717),
+            Color(0xFF33270D),
+            Color(0xFF8A6B08),
+          ],
+          stops: [0.0, 0.55, 1.0],
+        ),
+        boxShadow: const [
+          BoxShadow(
+            color: Color(0x26120E05),
+            blurRadius: 18,
+            offset: Offset(0, 10),
+          ),
+        ],
+      ),
+      child: Stack(
+        children: [
+          Positioned(
+            right: -18,
+            top: -24,
+            child: Container(
+              width: 132,
+              height: 132,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: const Color(0x55D4AF37),
+                  width: 18,
+                ),
+              ),
+            ),
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Container(
+                    width: 44,
+                    height: 44,
+                    decoration: BoxDecoration(
+                      color: Colors.black,
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: const Color(0xFFD4AF37),
+                        width: 1.5,
+                      ),
+                    ),
+                    child: ClipOval(
+                      child: Image.asset(
+                        'assets/images/tb_xi_logo.png',
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 11),
+                  const Text(
+                    'TB XI',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w800,
+                      letterSpacing: 1.2,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 28),
+              const Text(
+                'Yang dekat,\nlebih berarti.',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 30,
+                  height: 1.08,
+                  fontWeight: FontWeight.w800,
+                  letterSpacing: -0.6,
+                ),
+              ),
+              const SizedBox(height: 12),
+              const Text(
+                'Temukan yang dibutuhkan. Bagikan yang Anda punya.',
+                style: TextStyle(
+                  color: Color(0xD9FFFFFF),
+                  fontSize: 13,
+                  height: 1.4,
+                ),
+              ),
+              const SizedBox(height: 20),
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 8,
+                ),
+                decoration: BoxDecoration(
+                  color: const Color(0x26FFFFFF),
+                  borderRadius: BorderRadius.circular(30),
+                  border: Border.all(color: const Color(0x40FFFFFF)),
+                ),
+                child: const Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      Icons.location_on_outlined,
+                      color: Color(0xFFE8D18A),
+                      size: 16,
+                    ),
+                    SizedBox(width: 6),
+                    Text(
+                      'Semarang Selatan · radius 1 KM',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 11,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class HomeContent extends StatelessWidget {
   const HomeContent({super.key});
 
@@ -1571,108 +1710,9 @@ class HomeContent extends StatelessWidget {
           padding: const EdgeInsets.fromLTRB(20, 18, 20, 30),
           sliver: SliverList(
             delegate: SliverChildListDelegate([
-              // HEADER
-              Row(
-                children: [
-                  Container(
-                    width: 56,
-                    height: 56,
-                    decoration: BoxDecoration(
-                      color: Colors.black,
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        color: const Color(0xFFD4AF37),
-                        width: 1.5,
-                      ),
-                    ),
-                    child: ClipOval(
-                      child: Image.asset(
-                        'assets/images/tb_xi_logo.png',
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  const Expanded(
-                    child: Column(
-                      crossAxisAlignment:
-                          CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'TB XI',
-                          style: TextStyle(
-                            fontSize: 22,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                        SizedBox(height: 2),
-                        Text(
-                          'Sederhana, Bermakna, Dekat dengan Manusia.',
-                          style: TextStyle(
-                            fontSize: 11,
-                            color: Colors.black54,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
+              const HomeHero(),
 
-              const SizedBox(height: 26),
-
-              // LOKASI
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 13,
-                ),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(
-                    color: Colors.black12,
-                  ),
-                ),
-                child: const Row(
-                  children: [
-                    Icon(
-                      Icons.location_on_outlined,
-                      color: Color(0xFF8C6A00),
-                    ),
-                    SizedBox(width: 9),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment:
-                            CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Semarang Selatan',
-                            style: TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          SizedBox(height: 2),
-                          Text(
-                            'Yang tersedia dalam radius 1 KM',
-                            style: TextStyle(
-                              fontSize: 11,
-                              color: Colors.black54,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Icon(
-                      Icons.chevron_right,
-                      color: Colors.black38,
-                    ),
-                  ],
-                ),
-              ),
-
-              const SizedBox(height: 28),
+              const SizedBox(height: 30),
 
               const Text(
                 'Apa yang ingin Anda lakukan?',
