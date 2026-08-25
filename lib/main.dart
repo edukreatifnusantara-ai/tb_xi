@@ -141,7 +141,7 @@ class _AppStartPageState extends State<AppStartPage> {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (_) => const LoginPage(),
+          builder: (_) => const WelcomePage(),
         ),
       );
     }
@@ -159,6 +159,84 @@ class _AppStartPageState extends State<AppStartPage> {
   }
 }
 
+
+// ============================================================
+// WELCOME / PEMBUKA
+// ============================================================
+
+class WelcomePage extends StatelessWidget {
+  const WelcomePage({super.key});
+
+  void openLogin(BuildContext context) {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (_) => const LoginPage(),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Color(0xFF123D32),
+              Color(0xFF1F6048),
+              Color(0xFF081F1A),
+            ],
+            stops: [0.0, 0.52, 1.0],
+          ),
+        ),
+        child: SafeArea(
+          child: Center(
+            child: Semantics(
+              button: true,
+              label: 'Masuk ke TB XI',
+              child: InkWell(
+                onTap: () => openLogin(context),
+                borderRadius: BorderRadius.circular(150),
+                child: Container(
+                  width: 250,
+                  height: 250,
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF071914),
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: const Color(0xFFD4AF37),
+                      width: 3,
+                    ),
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Color(0x66000000),
+                        blurRadius: 28,
+                        spreadRadius: 5,
+                        offset: Offset(0, 12),
+                      ),
+                    ],
+                  ),
+                  child: ClipOval(
+                    child: Image.asset(
+                      'assets/images/tb_xi_logo.png',
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
 
 // ============================================================
 // LOGIN / REGISTRASI
