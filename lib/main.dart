@@ -2147,9 +2147,13 @@ class NearbyCard extends StatelessWidget {
                       BorderRadius.circular(12),
                 ),
               ),
-              child: const Text(
-                'MATCH',
-                style: TextStyle(
+              child: Text(
+                item.type == 'PUNYA'
+                    ? 'BERBAGI'
+                    : item.type == 'BUTUH'
+                        ? 'TERIMA'
+                        : 'MATCH',
+                style: const TextStyle(
                   fontSize: 11,
                   fontWeight: FontWeight.w800,
                 ),
