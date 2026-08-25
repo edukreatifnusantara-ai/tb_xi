@@ -46,7 +46,7 @@ class DatabaseHelper {
 
     return await openDatabase(
       path,
-      version: 4,
+      version: 5,
       onCreate: (db, version) async {
         await db.execute('''
           CREATE TABLE users (
@@ -87,6 +87,18 @@ class DatabaseHelper {
             FOREIGN KEY (item_id) REFERENCES items(id),
             FOREIGN KEY (requester_user_id) REFERENCES users(id),
             FOREIGN KEY (owner_user_id) REFERENCES users(id)
+          )
+        ''');
+
+        await db.execute('''
+          CREATE TABLE match_requests (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            requester_user_id INTEGER NOT NULL,
+            item_name TEXT NOT NULL,
+            item_type TEXT NOT NULL,
+            status TEXT NOT NULL,
+            created_at TEXT NOT NULL,
+            FOREIGN KEY (requester_user_id) REFERENCES users(id)
           )
         ''');
       },
@@ -135,6 +147,20 @@ class DatabaseHelper {
             )
           ''');
         }
+
+        if (oldVersion < 5) {
+          await db.execute('''
+            CREATE TABLE match_requests (
+              id INTEGER PRIMARY KEY AUTOINCREMENT,
+              requester_user_id INTEGER NOT NULL,
+              item_name TEXT NOT NULL,
+              item_type TEXT NOT NULL,
+              status TEXT NOT NULL,
+              created_at TEXT NOT NULL,
+              FOREIGN KEY (requester_user_id) REFERENCES users(id)
+            )
+          ''');
+        }
       },
     );
   }
@@ -167,6 +193,11 @@ class DatabaseHelper {
         where: 'requester_user_id IN (SELECT id FROM users WHERE phone = ?) '
             'OR owner_user_id IN (SELECT id FROM users WHERE phone = ?)',
         whereArgs: [phone, phone],
+      );
+      await txn.delete(
+        'match_requests',
+        where: 'requester_user_id IN (SELECT id FROM users WHERE phone = ?)',
+        whereArgs: [phone],
       );
       await txn.delete(
         'items',
@@ -275,6 +306,22 @@ class DatabaseHelper {
     }
 
     return matches;
+  }
+
+  Future<int> createMatchRequest({
+    required int requesterUserId,
+    required String itemName,
+    required String itemType,
+  }) async {
+    final db = await database;
+
+    return await db.insert('match_requests', {
+      'requester_user_id': requesterUserId,
+      'item_name': itemName,
+      'item_type': itemType,
+      'status': 'WAITING',
+      'created_at': DateTime.now().toIso8601String(),
+    });
   }
 
   Future<List<Map<String, dynamic>>> getPendingMatches({

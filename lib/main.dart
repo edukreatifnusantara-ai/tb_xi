@@ -2801,9 +2801,7 @@ class _MatchPageState extends State<MatchPage> {
               width: double.infinity,
               height: 52,
               child: FilledButton(
-                onPressed: matches.isEmpty
-                    ? null
-                    : () async {
+                onPressed: () async {
                         try {
                           final db =
                               await DatabaseHelper.instance.database;
@@ -2830,6 +2828,21 @@ class _MatchPageState extends State<MatchPage> {
 
                           final requesterUserId =
                               users.first['id'] as int;
+
+                          if (matches.isEmpty) {
+                            await DatabaseHelper.instance.createMatchRequest(
+                              requesterUserId: requesterUserId,
+                              itemName: widget.itemName,
+                              itemType: widget.itemType,
+                            );
+
+                            if (!mounted) return;
+
+                            setState(() {
+                              step = 1;
+                            });
+                            return;
+                          }
 
                           final candidate = matches.first;
 
@@ -2930,7 +2943,7 @@ class _MatchPageState extends State<MatchPage> {
             const SizedBox(height: 24),
 
             const Text(
-              'Match terkirim',
+              'Permintaan tersimpan',
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.w700,
@@ -2950,7 +2963,8 @@ class _MatchPageState extends State<MatchPage> {
             const SizedBox(height: 20),
 
             const Text(
-              'Menunggu konfirmasi dari pemberi.',
+              'Permintaan Anda tersimpan dan akan menunggu calon '
+              'yang sesuai.',
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: Colors.black54,
@@ -2972,21 +2986,28 @@ class _MatchPageState extends State<MatchPage> {
 
             const Spacer(),
 
-            // SIMULASI KONFIRMASI
+            // CEK ULANG CALON
             SizedBox(
               width: double.infinity,
               height: 52,
               child: FilledButton(
-                onPressed: () {
+                onPressed: () async {
                   setState(() {
-                    step = 2;
+                    loadingMatches = true;
                   });
+                  await _loadMatches();
+                  if (!mounted) return;
+                  if (matches.isNotEmpty) {
+                    setState(() {
+                      step = 0;
+                    });
+                  }
                 },
                 style: FilledButton.styleFrom(
                   backgroundColor: const Color(0xFF8A6B08),
                 ),
                 child: const Text(
-                  'SIMULASIKAN: PEMBERI SIAP',
+                  'CEK LAGI CALON',
                   style: TextStyle(
                     fontWeight: FontWeight.w700,
                   ),
