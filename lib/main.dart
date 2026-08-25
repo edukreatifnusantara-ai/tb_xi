@@ -47,12 +47,12 @@ final ValueNotifier<List<TbItem>> itemsNotifier =
   TbItem(
     name: 'Sayuran',
     description: 'Segar · Rp5.000',
-    type: 'PUNYA',
+    type: 'BERBAGI',
   ),
   TbItem(
     name: 'Servis Kipas',
     description: 'Jasa perbaikan',
-    type: 'PUNYA',
+    type: 'BERBAGI',
   ),
 ]);
 
@@ -1858,48 +1858,24 @@ class HomeContent extends StatelessWidget {
 
               const SizedBox(height: 16),
 
-              // BERBAGI
-              ActionButton(
-                icon: Icons.favorite_border,
-                title: 'BERBAGI',
-                subtitle:
-                    'Berikan kepada yang membutuhkan',
-                iconColor: const Color(0xFFB24C5A),
-                fullWidth: true,
-                onTap: () {
-                  openPage(
-                    context,
-                    const FormPage(
-                      title: 'Saya Berbagi',
-                      description:
-                          'Apa yang ingin Anda bagikan?',
-                      buttonText: 'BAGIKAN',
-                      type: 'BERBAGI',
-                    ),
-                  );
-                },
-              ),
-
-              const SizedBox(height: 12),
-
-              // BUTUH + PUNYA
+              // BERBAGI + MEMBUTUHKAN
               Row(
                 children: [
                   Expanded(
                     child: ActionButton(
-                      icon: Icons.search,
-                      title: 'BUTUH',
-                      subtitle: 'Cari kebutuhan',
-                      iconColor: const Color(0xFF3F6F8F),
+                      icon: Icons.favorite_border,
+                      title: 'BERBAGI',
+                      subtitle: 'Saya ingin berbagi',
+                      iconColor: const Color(0xFFB24C5A),
                       onTap: () {
                         openPage(
                           context,
                           const FormPage(
-                            title: 'Saya Butuh',
+                            title: 'Saya Berbagi',
                             description:
-                                'Apa yang sedang Anda butuhkan?',
-                            buttonText: 'POSTING KEBUTUHAN',
-                            type: 'BUTUH',
+                                'Apa yang ingin Anda bagikan?',
+                            buttonText: 'BAGIKAN',
+                            type: 'BERBAGI',
                           ),
                         );
                       },
@@ -1908,19 +1884,19 @@ class HomeContent extends StatelessWidget {
                   const SizedBox(width: 12),
                   Expanded(
                     child: ActionButton(
-                      icon: Icons.inventory_2_outlined,
-                      title: 'PUNYA',
-                      subtitle: 'Saya punya',
-                      iconColor: const Color(0xFF5F7F52),
+                      icon: Icons.volunteer_activism_outlined,
+                      title: 'MEMBUTUHKAN',
+                      subtitle: 'Saya membutuhkan',
+                      iconColor: const Color(0xFF3F6F8F),
                       onTap: () {
                         openPage(
                           context,
                           const FormPage(
-                            title: 'Saya Punya',
+                            title: 'Saya Membutuhkan',
                             description:
-                                'Apa yang Anda punya?',
-                            buttonText: 'POSTING',
-                            type: 'PUNYA',
+                                'Apa yang sedang Anda butuhkan?',
+                            buttonText: 'POSTING KEBUTUHAN',
+                            type: 'MEMBUTUHKAN',
                           ),
                         );
                       },
@@ -2194,7 +2170,11 @@ class NearbyCard extends StatelessWidget {
                     ),
                     const SizedBox(width: 9),
                     Text(
-                      item.type,
+                      item.type == 'PUNYA'
+                          ? 'BERBAGI'
+                          : item.type == 'BUTUH'
+                              ? 'MEMBUTUHKAN'
+                              : item.type,
                       style: const TextStyle(
                         fontSize: 9,
                         fontWeight: FontWeight.w700,
@@ -2226,9 +2206,9 @@ class NearbyCard extends StatelessWidget {
                 ),
               ),
               child: Text(
-                item.type == 'PUNYA'
+                item.type == 'MEMBUTUHKAN'
                     ? 'BERBAGI'
-                    : item.type == 'BUTUH'
+                    : item.type == 'BERBAGI'
                         ? 'TERIMA'
                         : 'MATCH',
                 style: const TextStyle(

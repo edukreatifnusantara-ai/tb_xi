@@ -408,15 +408,16 @@ class DatabaseHelper {
   }) async {
     final db = await database;
 
-    final oppositeType = type == 'BUTUH'
-        ? 'PUNYA'
-        : 'BUTUH';
+    final oppositeTypes = type == 'MEMBUTUHKAN'
+        ? ['BERBAGI', 'PUNYA']
+        : ['MEMBUTUHKAN', 'BUTUH'];
 
     return await db.query(
       'items',
-      where: 'type = ? AND LOWER(name) = LOWER(?)',
+      where: 'type IN (?, ?) AND LOWER(name) = LOWER(?)',
       whereArgs: [
-        oppositeType,
+        oppositeTypes[0],
+        oppositeTypes[1],
         name.trim(),
       ],
       orderBy: 'id DESC',
