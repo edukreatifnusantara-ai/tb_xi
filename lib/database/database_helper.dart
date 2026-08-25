@@ -158,6 +158,29 @@ class DatabaseHelper {
     );
   }
 
+  Future<void> clearLocalAccount(String phone) async {
+    final db = await database;
+
+    await db.transaction((txn) async {
+      await txn.delete(
+        'matches',
+        where: 'requester_user_id IN (SELECT id FROM users WHERE phone = ?) '
+            'OR owner_user_id IN (SELECT id FROM users WHERE phone = ?)',
+        whereArgs: [phone, phone],
+      );
+      await txn.delete(
+        'items',
+        where: 'user_id IN (SELECT id FROM users WHERE phone = ?)',
+        whereArgs: [phone],
+      );
+      await txn.delete(
+        'users',
+        where: 'phone = ?',
+        whereArgs: [phone],
+      );
+    });
+  }
+
   Future<Map<String, dynamic>?> getUserByPhone(
     String phone,
   ) async {

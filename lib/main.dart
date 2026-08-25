@@ -764,6 +764,49 @@ class _ActivityPageState extends State<ActivityPage> {
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
 
+  Future<void> _logout(BuildContext context) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('Keluar dari akun?'),
+        content: const Text(
+          'Data akun dan aktivitas lokal di perangkat ini akan dihapus.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext, false),
+            child: const Text('BATAL'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(dialogContext, true),
+            child: const Text('KELUAR'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed != true) return;
+
+    try {
+      await DatabaseHelper.instance.clearLocalAccount(currentUserPhone);
+      currentUserName = '';
+      currentUserPhone = '';
+      currentUserEmail = '';
+      itemsNotifier.value = [];
+
+      if (!context.mounted) return;
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (_) => const LoginPage()),
+        (_) => false,
+      );
+    } catch (e) {
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Gagal keluar dari akun: $e')),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return CustomScrollView(
@@ -873,6 +916,14 @@ class ProfilePage extends StatelessWidget {
                 title: 'Tentang TB XI',
                 subtitle: 'Sederhana, Bermakna, Dekat dengan Manusia.',
               ),
+
+              _profileMenu(
+                icon: Icons.logout,
+                title: 'Keluar akun',
+                subtitle: 'Hapus sesi dan data lokal akun ini',
+                iconColor: const Color(0xFFB24C5A),
+                onTap: () => _logout(context),
+              ),
             ]),
           ),
         ),
@@ -884,6 +935,7 @@ class ProfilePage extends StatelessWidget {
     required IconData icon,
     required String title,
     required String subtitle,
+    Color iconColor = const Color(0xFF8A6B08),
     VoidCallback? onTap,
   }) {
     return GestureDetector(
@@ -902,7 +954,7 @@ class ProfilePage extends StatelessWidget {
         children: [
           Icon(
             icon,
-            color: const Color(0xFF8A6B08),
+            color: iconColor,
           ),
           const SizedBox(width: 14),
           Expanded(
@@ -2386,6 +2438,11 @@ class _MatchPageState extends State<MatchPage> {
       );
 
       if (users.isEmpty) {
+        if (mounted) {
+          setState(() {
+            loadingMatches = false;
+          });
+        }
         return;
       }
 
@@ -2401,6 +2458,11 @@ class _MatchPageState extends State<MatchPage> {
           (user['location_radius'] as num?)?.toDouble() ?? 1;
 
       if (latitude == null || longitude == null) {
+        if (mounted) {
+          setState(() {
+            loadingMatches = false;
+          });
+        }
         return;
       }
 
