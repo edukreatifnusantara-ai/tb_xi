@@ -2177,6 +2177,14 @@ class NearbyCard extends StatelessWidget {
     return '📦';
   }
 
+  String get actionLabel {
+    if (item.type == 'BERBAGI') return 'SAYA MENERIMA';
+    if (item.type == 'MEMBUTUHKAN' || item.type == 'BUTUH') {
+      return 'SAYA BERBAGI';
+    }
+    return 'SAYA BERBAGI';
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -2267,7 +2275,7 @@ class NearbyCard extends StatelessWidget {
           const SizedBox(width: 8),
 
           SizedBox(
-            width: 72,
+            width: 112,
             child: FilledButton(
               onPressed: onMatch,
               style: FilledButton.styleFrom(
@@ -2283,11 +2291,7 @@ class NearbyCard extends StatelessWidget {
                 ),
               ),
               child: Text(
-                item.type == 'MEMBUTUHKAN'
-                    ? 'BERBAGI'
-                    : item.type == 'BERBAGI'
-                        ? 'TERIMA'
-                        : 'MATCH',
+                actionLabel,
                 style: const TextStyle(
                   fontSize: 11,
                   fontWeight: FontWeight.w800,
@@ -2559,6 +2563,11 @@ class _MatchPageState extends State<MatchPage> {
   final TextEditingController instructionController =
       TextEditingController();
 
+  String get actionLabel =>
+      widget.itemType == 'BERBAGI'
+          ? 'SAYA MENERIMA'
+          : 'SAYA BERBAGI';
+
   @override
   void initState() {
     super.initState();
@@ -2679,8 +2688,10 @@ class _MatchPageState extends State<MatchPage> {
 
             const SizedBox(height: 18),
 
-            const Text(
-              'Anda ingin MATCH?',
+            Text(
+              widget.itemType == 'BERBAGI'
+                  ? 'Anda ingin menerima?'
+                  : 'Anda ingin berbagi?',
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.w700,
@@ -2876,8 +2887,8 @@ class _MatchPageState extends State<MatchPage> {
                   backgroundColor:
                       const Color(0xFF8A6B08),
                 ),
-                child: const Text(
-                  'YA, MATCH',
+                child: Text(
+                  actionLabel,
                   style: TextStyle(
                     fontWeight: FontWeight.w700,
                   ),
