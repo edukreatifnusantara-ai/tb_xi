@@ -189,46 +189,123 @@ class WelcomePage extends StatelessWidget {
             colors: [
               Color(0xFF123D32),
               Color(0xFF1F6048),
-              Color(0xFF081F1A),
+              Color(0xFF071D18),
             ],
-            stops: [0.0, 0.52, 1.0],
+            stops: [0.0, 0.48, 1.0],
           ),
         ),
         child: SafeArea(
           child: Center(
-            child: Semantics(
-              button: true,
-              label: 'Masuk ke TB XI',
-              child: InkWell(
-                onTap: () => openLogin(context),
-                borderRadius: BorderRadius.circular(150),
-                child: Container(
-                  width: 250,
-                  height: 250,
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF071914),
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: const Color(0xFFD4AF37),
-                      width: 3,
-                    ),
-                    boxShadow: const [
-                      BoxShadow(
-                        color: Color(0x66000000),
-                        blurRadius: 28,
-                        spreadRadius: 5,
-                        offset: Offset(0, 12),
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Semantics(
+                    button: true,
+                    label: 'Masuk ke TB XI',
+                    child: InkWell(
+                      onTap: () => openLogin(context),
+                      borderRadius: BorderRadius.circular(155),
+                      child: Container(
+                        width: 286,
+                        height: 286,
+                        padding: const EdgeInsets.all(7),
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          gradient: const LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: [
+                              Color(0xFFFFE9A3),
+                              Color(0xFFD4AF37),
+                              Color(0xFF8A5D08),
+                              Color(0xFFFFD966),
+                            ],
+                          ),
+                          boxShadow: const [
+                            BoxShadow(
+                              color: Color(0x88000000),
+                              blurRadius: 34,
+                              spreadRadius: 8,
+                              offset: Offset(0, 16),
+                            ),
+                            BoxShadow(
+                              color: Color(0x66E8C65A),
+                              blurRadius: 30,
+                              spreadRadius: 2,
+                            ),
+                          ],
+                        ),
+                        child: Container(
+                          padding: const EdgeInsets.all(3),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                              color: const Color(0xFFFFF0B8),
+                              width: 2,
+                            ),
+                          ),
+                          child: ClipOval(
+                            child: Transform.scale(
+                              scale: 1.18,
+                              child: Image.asset(
+                                'assets/images/tb_xi_logo.png',
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                        ),
                       ),
-                    ],
-                  ),
-                  child: ClipOval(
-                    child: Image.asset(
-                      'assets/images/tb_xi_logo.png',
-                      fit: BoxFit.cover,
                     ),
                   ),
-                ),
+                  const SizedBox(height: 34),
+                  const Text(
+                    'SEDERHANA, BERMAKNA',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Color(0xFFFFE7A0),
+                      fontSize: 18,
+                      fontWeight: FontWeight.w800,
+                      letterSpacing: 2.2,
+                      shadows: [
+                        Shadow(
+                          color: Color(0xAA000000),
+                          blurRadius: 8,
+                          offset: Offset(0, 3),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 7),
+                  const Text(
+                    'DEKAT DENGAN MANUSIA',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Color(0xFFF7F0D0),
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                      letterSpacing: 1.8,
+                      shadows: [
+                        Shadow(
+                          color: Color(0x99000000),
+                          blurRadius: 7,
+                          offset: Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 22),
+                  const Text(
+                    'KETUK LOGO UNTUK MASUK',
+                    style: TextStyle(
+                      color: Color(0xB3FFFFFF),
+                      fontSize: 10,
+                      fontWeight: FontWeight.w700,
+                      letterSpacing: 1.4,
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
