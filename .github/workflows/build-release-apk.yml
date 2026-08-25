@@ -28,13 +28,13 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
-      - name: Build release APK
-        run: flutter build apk --release
+      - name: Build release APKs per architecture
+        run: flutter build apk --release --split-per-abi
 
-      - name: Upload APK artifact
+      - name: Upload APK artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: tb-xi-release-apk
-          path: build/app/outputs/flutter-apk/app-release.apk
+          name: tb-xi-release-apks
+          path: build/app/outputs/flutter-apk/app-*-release.apk
           if-no-files-found: error
           retention-days: 14
